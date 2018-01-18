@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        FirebaseApp.configure()
+
+        if Auth.auth().currentUser == nil {
+            let storyboard = UIStoryboard(name: "Register", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "welcome")
+            window?.rootViewController = vc
+        }
+        else{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "home")
+            window?.rootViewController = vc
+        }
+        
+        
         return true
     }
 

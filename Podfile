@@ -6,5 +6,7 @@ target 'Classy' do
   use_frameworks!
 
   # Pods for Classy
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
 
 end
