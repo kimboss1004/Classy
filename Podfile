@@ -8,5 +8,6 @@ target 'Classy' do
   # Pods for Classy
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
+  pod 'Firebase/Database'
 
 end

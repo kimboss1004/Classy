@@ -17,6 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
+        
+//        do{
+//            try Auth.auth().signOut()
+//        } catch let error as NSError{
+//            print(error.localizedDescription)
+//        }
 
         if Auth.auth().currentUser == nil {
             let storyboard = UIStoryboard(name: "Register", bundle: nil)
