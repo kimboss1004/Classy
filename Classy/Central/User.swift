@@ -18,13 +18,13 @@ struct User{
     let profileURL: String?
     let userRef: DatabaseReference?
     
-    init(name:String, major:String, grade:String, credentials:String){
+    init(name:String, major:String, grade:String, credentials:String, profileURL:String){
         self.userKey = (Auth.auth().currentUser?.uid)!
         self.name = name
         self.major = major
         self.grade = grade
         self.credentials = credentials
-        self.profileURL = ""
+        self.profileURL = profileURL
         userRef = nil
     }
     
@@ -56,6 +56,7 @@ struct User{
             credentials = ""
         }
         if let profileURL = (snapshot.value as? NSDictionary)?[profileURLdb] as? String {
+            
             self.profileURL = profileURL
         } else {
             profileURL = ""

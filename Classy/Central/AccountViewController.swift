@@ -18,6 +18,7 @@ class AccountViewController: UIViewController {
     @IBOutlet weak var gradeTextView: UITextView!
     @IBOutlet weak var majorTextView: UITextView!
     @IBOutlet weak var credentialsTextView: UITextView!
+    var profileImageUrlText: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +28,24 @@ class AccountViewController: UIViewController {
         profileImageView.layer.cornerRadius = 90
         profileImageView.layer.masksToBounds = true
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    
+    func setTextFields(){
+        // calls current user and displays its attributes
+        let userRef = dbref.child((Auth.auth().currentUser?.uid)!)
+        userRef.observeSingleEvent(of: .value) { (snapshot) in
+            let user = User(snapshot: snapshot)
+            self.nameTextView.text = user.name
+            self.gradeTextView.text = user.grade
+            self.majorTextView.text = user.major
+            self.credentialsTextView.text = user.credentials
+            if let profileURL = user.profileURL {
+                // sets value of the url field, for the update method
+                self.profileImageUrlText = profileURL
+                // cache image using extension
+                self.profileImageView.loadImageUsingCacheWithURLString(urlString: profileURL)
+            }
+            
+        }
     }
     
     @IBAction func logout(_ sender: Any) {
@@ -60,25 +76,9 @@ class AccountViewController: UIViewController {
     
     @IBAction func save(_ sender: Any) {
         // saves String attributes of user, but not profile
-        let user = User(name: nameTextView.text, major: majorTextView.text, grade: gradeTextView.text, credentials: credentialsTextView.text)
+        let user = User(name: nameTextView.text, major: majorTextView.text, grade: gradeTextView.text, credentials: credentialsTextView.text, profileURL: profileImageUrlText)
         dbref.updateChildValues([user.userKey! : user.toAnyObject()])
         Helper.shared.showOKAlert(title: "Saved", message: "Your profile has been saved", viewController: self)
-    }
-    
-    func setTextFields(){
-        // calls current user and displays its attributes
-        let userRef = dbref.child((Auth.auth().currentUser?.uid)!)
-        userRef.observeSingleEvent(of: .value) { (snapshot) in
-            let user = User(snapshot: snapshot)
-            self.nameTextView.text = user.name
-            self.gradeTextView.text = user.grade
-            self.majorTextView.text = user.major
-            self.credentialsTextView.text = user.credentials
-            if let profileURL = user.profileURL {
-                // cache image using extension
-                self.profileImageView.loadImageUsingCacheWithURLString(urlString: profileURL)
-            }
-        }
     }
     
     
@@ -93,7 +93,7 @@ extension AccountViewController: UINavigationControllerDelegate, UIImagePickerCo
         profileImageView.image = image
         dismiss(animated: true, completion: nil)
         
-        // store image in FirebaseStorage and save the url in User
+        // store image in FirebaseStorage
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("\(imageName).png")
         if let uploadData = UIImagePNGRepresentation(profileImageView.image!){
@@ -102,9 +102,12 @@ extension AccountViewController: UINavigationControllerDelegate, UIImagePickerCo
                         print(error as Any)
                         return
                     }
+                    // save image-url in current User
                     if let profileImageURL = metadata?.downloadURL()?.absoluteString {
                         let userId = Auth.auth().currentUser?.uid
                         self.dbref.child(userId!).child(profileURLdb).setValue(profileImageURL)
+                        // set profileText to url, for save method
+                        self.profileImageUrlText = profileImageURL
                         Helper.shared.showOKAlert(title: "Uploaded", message: "Your profile uploaded!", viewController: self)
                     }
             })

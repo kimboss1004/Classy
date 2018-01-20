@@ -21,20 +21,21 @@ extension UIImageView {
             return
         }
         
-        let url = URL(string: urlString)
-        URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
-            // download hit an error so lets return out
-            if error != nil {
-                print(error as Any)
-                return
-            }
-            //fire off a new download
-            DispatchQueue.main.async {
-                if let downloadedImage = UIImage(data: data!){
-                    imageCache.setObject(downloadedImage, forKey: urlString as AnyObject)
-                    self.image = downloadedImage
+        if let url = URL(string: urlString) {
+            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                // download hit an error so lets return out
+                if error != nil {
+                    print(error as Any)
+                    return
                 }
-            }
-        }).resume()
+                //fire off a new download
+                DispatchQueue.main.async {
+                    if let downloadedImage = UIImage(data: data!){
+                        imageCache.setObject(downloadedImage, forKey: urlString as AnyObject)
+                        self.image = downloadedImage
+                    }
+                }
+            }).resume()
+        }
     }
 }
