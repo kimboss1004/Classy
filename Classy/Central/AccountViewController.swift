@@ -23,18 +23,9 @@ class AccountViewController: UIViewController {
         super.viewDidLoad()
         dbref = Database.database().reference().child(USERdb)
         setTextFields()
-    }
-    
-    func setTextFields(){
-        let userRef = dbref.child((Auth.auth().currentUser?.uid)!)
-        userRef.observeSingleEvent(of: .value) { (snapshot) in
-            let user = User(snapshot: snapshot)
-            self.nameTextView.text = user.name
-            self.gradeTextView.text = user.grade
-            self.majorTextView.text = user.major
-            self.credentialsTextView.text = user.credentials
-        }
-        
+        // circular profile pic
+        profileImageView.layer.cornerRadius = 90
+        profileImageView.layer.masksToBounds = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -58,14 +49,66 @@ class AccountViewController: UIViewController {
     }
     
     @IBAction func uploadProfile(_ sender: Any) {
-        
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
+            let imagePicker = UIImagePickerController()
+            imagePicker.allowsEditing = true
+            imagePicker.sourceType = .photoLibrary
+            imagePicker.delegate = self
+            present(imagePicker, animated: true, completion: nil)
+        }
     }
     
     @IBAction func save(_ sender: Any) {
+        // saves String attributes of user, but not profile
         let user = User(name: nameTextView.text, major: majorTextView.text, grade: gradeTextView.text, credentials: credentialsTextView.text)
-        dbref.updateChildValues([user.userKey : user.toAnyObject()])
+        dbref.updateChildValues([user.userKey! : user.toAnyObject()])
         Helper.shared.showOKAlert(title: "Saved", message: "Your profile has been saved", viewController: self)
     }
     
+    func setTextFields(){
+        // calls current user and displays its attributes
+        let userRef = dbref.child((Auth.auth().currentUser?.uid)!)
+        userRef.observeSingleEvent(of: .value) { (snapshot) in
+            let user = User(snapshot: snapshot)
+            self.nameTextView.text = user.name
+            self.gradeTextView.text = user.grade
+            self.majorTextView.text = user.major
+            self.credentialsTextView.text = user.credentials
+            if let profileURL = user.profileURL {
+                // cache image using extension
+                self.profileImageView.loadImageUsingCacheWithURLString(urlString: profileURL)
+            }
+        }
+    }
+    
+    
+}
+
+
+extension AccountViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        guard let image = info[UIImagePickerControllerEditedImage] as? UIImage else {
+            return
+        }
+        profileImageView.image = image
+        dismiss(animated: true, completion: nil)
+        
+        // store image in FirebaseStorage and save the url in User
+        let imageName = NSUUID().uuidString
+        let storageRef = Storage.storage().reference().child("\(imageName).png")
+        if let uploadData = UIImagePNGRepresentation(profileImageView.image!){
+            storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+                    if error != nil{
+                        print(error as Any)
+                        return
+                    }
+                    if let profileImageURL = metadata?.downloadURL()?.absoluteString {
+                        let userId = Auth.auth().currentUser?.uid
+                        self.dbref.child(userId!).child(profileURLdb).setValue(profileImageURL)
+                        Helper.shared.showOKAlert(title: "Uploaded", message: "Your profile uploaded!", viewController: self)
+                    }
+            })
+        }
+    }
     
 }

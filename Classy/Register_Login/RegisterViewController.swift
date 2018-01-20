@@ -36,7 +36,7 @@ class RegisterViewController: UIViewController {
         Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
             if(error == nil){
                 let user = User(name: "", major: "", grade: "", credentials: "")
-                Database.database().reference().child(USERdb).child(user.userKey).setValue(user.toAnyObject())
+                Database.database().reference().child(USERdb).child(user.userKey!).setValue(user.toAnyObject())
                 Helper.shared.showOKAlert(title: "Welcome!", message: "You have succesfully registered." , viewController: self)
                 Helper.shared.switchStoryboard(storyBoardName: "Main", identifier: "home")
                 return

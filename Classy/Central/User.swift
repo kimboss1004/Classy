@@ -10,11 +10,12 @@ import Foundation
 import Firebase
 
 struct User{
-    let userKey: String
-    let name: String
-    let major: String
-    let grade: String
-    let credentials: String
+    let userKey: String?
+    let name: String?
+    let major: String?
+    let grade: String?
+    let credentials: String?
+    let profileURL: String?
     let userRef: DatabaseReference?
     
     init(name:String, major:String, grade:String, credentials:String){
@@ -23,6 +24,7 @@ struct User{
         self.major = major
         self.grade = grade
         self.credentials = credentials
+        self.profileURL = ""
         userRef = nil
     }
     
@@ -53,9 +55,14 @@ struct User{
         }else{
             credentials = ""
         }
+        if let profileURL = (snapshot.value as? NSDictionary)?[profileURLdb] as? String {
+            self.profileURL = profileURL
+        } else {
+            profileURL = ""
+        }
     }
     
     func toAnyObject() -> AnyObject {
-        return ["name" : name, "major" : major, "grade" : grade, "credentials" : credentials] as AnyObject
+        return ["name" : name, "major" : major, "grade" : grade, "credentials" : credentials, profileURLdb : profileURL] as AnyObject
     }
 }

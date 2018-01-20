@@ -20,6 +20,7 @@
 		8444456E20102B46006D4B73 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8444456D20102B46006D4B73 /* AccountViewController.swift */; };
 		84444574201190D7006D4B73 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84444573201190D7006D4B73 /* User.swift */; };
 		8444457620128172006D4B73 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8444457520128172006D4B73 /* Constants.swift */; };
+		844445782012F77D006D4B73 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844445772012F77D006D4B73 /* Extensions.swift */; };
 		E908B41D4185066E9001B97B /* Pods_Classy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C787A89848B2B672BFA782D0 /* Pods_Classy.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		8444456D20102B46006D4B73 /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		84444573201190D7006D4B73 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8444457520128172006D4B73 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		844445772012F77D006D4B73 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C787A89848B2B672BFA782D0 /* Pods_Classy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Classy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF14400426ACF13AAC306E2F /* Pods-Classy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Classy.release.xcconfig"; path = "Pods/Target Support Files/Pods-Classy/Pods-Classy.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -103,6 +105,7 @@
 				84444569200F0B8D006D4B73 /* GoogleService-Info.plist */,
 				84444565200EFF7B006D4B73 /* Helper.swift */,
 				8444457520128172006D4B73 /* Constants.swift */,
+				844445772012F77D006D4B73 /* Extensions.swift */,
 			);
 			path = Classy;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84444564200EFDB2006D4B73 /* RegisterViewController.swift in Sources */,
+				844445782012F77D006D4B73 /* Extensions.swift in Sources */,
 				84444552200EF461006D4B73 /* ViewController.swift in Sources */,
 				8444456E20102B46006D4B73 /* AccountViewController.swift in Sources */,
 				84444550200EF461006D4B73 /* AppDelegate.swift in Sources */,
