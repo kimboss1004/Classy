@@ -80,8 +80,6 @@ class AccountViewController: UIViewController {
         dbref.updateChildValues([user.userKey! : user.toAnyObject()])
         Helper.shared.showOKAlert(title: "Saved", message: "Your profile has been saved", viewController: self)
     }
-    
-    
 }
 
 
